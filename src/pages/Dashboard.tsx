@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import GeneratorForm from '../components/GeneratorForm'
-import TokenCounter from '../components/TokenCounter'
+import { useAuth } from "../contexts/AuthContext";
+import GeneratorForm from "../components/GeneratorForm";
+import TokenCounter from "../components/TokenCounter";
 
 const Dashboard = () => {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   return (
     <div className="space-y-6">
@@ -17,7 +16,7 @@ const Dashboard = () => {
 
       <GeneratorForm />
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

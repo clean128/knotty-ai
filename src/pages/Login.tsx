@@ -119,10 +119,10 @@ const Login = () => {
             </a>
           </div>
 
-          <div className="mt-4 p-3 bg-blue-900/20 border border-blue-700 rounded-lg text-blue-300 text-sm">
+          {/* <div className="mt-4 p-3 bg-blue-900/20 border border-blue-700 rounded-lg text-blue-300 text-sm">
             <strong>Demo:</strong> Use username "demo" and password "demo" to
             try the application
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

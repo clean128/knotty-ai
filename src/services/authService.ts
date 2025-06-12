@@ -1,9 +1,9 @@
-import md5 from 'js-md5'
-import { User } from '../types'
+import { md5 } from "js-md5";
+import { User } from "../types";
 
 // Mock API service - replace with actual API calls
 class AuthService {
-  private baseUrl = '/api' // Replace with your actual API base URL
+  private baseUrl = "/api"; // Replace with your actual API base URL
 
   private getDeviceHash(): string {
     const data = [
@@ -11,99 +11,103 @@ class AuthService {
       navigator.platform,
       navigator.language,
       `${screen.width}x${screen.height}`,
-      window.devicePixelRatio.toString()
-    ].join('||')
-    
-    return md5(data)
+      window.devicePixelRatio.toString(),
+    ].join("||");
+
+    return md5(data);
   }
 
   private async getClientIP(): Promise<string> {
     try {
-      const response = await fetch('https://api.ipify.org?format=json')
-      const data = await response.json()
-      return data.ip
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
     } catch (error) {
-      return 'unknown'
+      return "unknown";
     }
   }
 
   async login(username: string, password: string): Promise<User> {
     try {
       // Mock implementation - replace with actual API call
-      const deviceHash = this.getDeviceHash()
-      const ip = await this.getClientIP()
+      const deviceHash = this.getDeviceHash();
+      const ip = await this.getClientIP();
 
       // Simulate API call
       const response = await fetch(`${this.baseUrl}/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username,
           password,
           devicehash: deviceHash,
-          ip
+          ip,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Login failed')
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
       }
 
-      const userData = await response.json()
-      return userData
+      const userData = await response.json();
+      return userData;
     } catch (error) {
       // Mock successful login for demo purposes
-      if (username === 'demo' && password === 'demo') {
+      if (username === "demo" && password === "demo") {
         return {
-          username: 'demo',
-          tokens: 100
-        }
+          username: "demo",
+          tokens: 100,
+        };
       }
-      throw new Error('Invalid credentials')
+      throw new Error("Invalid credentials");
     }
   }
 
-  async register(username: string, password: string, confirmPassword: string): Promise<void> {
+  async register(
+    username: string,
+    password: string,
+    confirmPassword: string
+  ): Promise<void> {
     if (password !== confirmPassword) {
-      throw new Error('Passwords do not match')
+      throw new Error("Passwords do not match");
     }
 
     try {
-      const deviceHash = this.getDeviceHash()
-      const ip = await this.getClientIP()
+      const deviceHash = this.getDeviceHash();
+      const ip = await this.getClientIP();
 
       // Mock implementation - replace with actual API call
       const response = await fetch(`${this.baseUrl}/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username,
           password,
           confirm_password: confirmPassword,
           hwid: deviceHash,
-          ip
+          ip,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Registration failed')
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Registration failed");
       }
     } catch (error) {
       // Mock successful registration for demo purposes
-      console.log('Registration successful (mock)')
+      console.log("Registration successful (mock)");
     }
   }
 
   logout(): void {
     // Clear any stored tokens or session data
-    localStorage.removeItem('user')
+    localStorage.removeItem("user");
   }
 }
 
-export const authService = new AuthService()
+export const authService = new AuthService();
