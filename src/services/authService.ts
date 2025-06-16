@@ -56,9 +56,9 @@ class AuthService {
       return userData;
     } catch (error) {
       // Mock successful login for demo purposes
-      if (username === "demo" && password === "demo") {
+      if (username === "admin" && password === "admin") {
         return {
-          username: "demo",
+          username: "Admin",
           tokens: 100,
         };
       }
