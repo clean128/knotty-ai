@@ -1,4 +1,10 @@
 import { useState } from "react";
+import { 
+  BeakerIcon,
+  ClipboardDocumentIcon,
+  LightBulbIcon,
+  CheckIcon
+} from "@heroicons/react/24/outline";
 
 const categoryPrompts = {
   "Hentai girls": [
@@ -77,33 +83,43 @@ const categoryPrompts = {
 
 const PromptExamples = () => {
   const [activeTab, setActiveTab] = useState("Anime girls");
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
-    // You could add a toast notification here
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white mb-2">
-          🧪 Prompt Examples
-        </h1>
-        <p className="text-gray-400">
-          Click on any prompt to copy it to your clipboard
-        </p>
+    <div className="space-y-8 animate-fade-in">
+      {/* Header */}
+      <div className="glass-card">
+        <div className="flex items-center space-x-4">
+          <div className="p-3 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-2xl">
+            <BeakerIcon className="w-8 h-8 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-display font-bold text-white">
+              Prompt Examples
+            </h1>
+            <p className="text-neutral-400 font-medium">
+              Click on any prompt to copy it to your clipboard
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-3">
         {Object.keys(categoryPrompts).map((category) => (
           <button
             key={category}
             onClick={() => setActiveTab(category)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
               activeTab === category
-                ? "bg-primary-600 text-black"
-                : "bg-dark-700 text-gray-300 hover:bg-dark-600"
+                ? "bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-glow"
+                : "bg-dark-700/50 text-neutral-300 hover:bg-dark-600/50 hover:text-white"
             }`}
           >
             {category}
@@ -113,23 +129,30 @@ const PromptExamples = () => {
 
       {/* Content */}
       <div className="section">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categoryPrompts[activeTab as keyof typeof categoryPrompts].map(
             (prompt, index) => (
               <div
                 key={index}
-                onClick={() => copyToClipboard(prompt)}
-                className="bg-dark-700 rounded-lg p-4 cursor-pointer hover:bg-dark-600 transition-colors duration-200 group"
+                onClick={() => copyToClipboard(prompt, index)}
+                className="bg-dark-700/30 backdrop-blur-sm rounded-2xl p-6 cursor-pointer hover:bg-dark-600/30 transition-all duration-300 group hover:scale-105 border border-dark-600/30 hover:border-primary-500/30"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-medium text-primary-600">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-primary-400 font-display">
                     {activeTab} #{index + 1}
                   </h3>
-                  <span className="text-xs text-gray-500 group-hover:text-gray-400">
-                    Click to copy
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    {copiedIndex === index ? (
+                      <CheckIcon className="w-5 h-5 text-accent-400" />
+                    ) : (
+                      <ClipboardDocumentIcon className="w-5 h-5 text-neutral-500 group-hover:text-neutral-400" />
+                    )}
+                    <span className="text-xs text-neutral-500 group-hover:text-neutral-400 font-medium">
+                      {copiedIndex === index ? 'Copied!' : 'Click to copy'}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-300 leading-relaxed line-clamp-6">
+                <p className="text-sm text-neutral-300 leading-relaxed line-clamp-6 font-mono">
                   {prompt}
                 </p>
               </div>
@@ -138,12 +161,15 @@ const PromptExamples = () => {
         </div>
       </div>
 
-      <div className="section bg-blue-900/20 border-blue-700">
-        <div className="flex items-start space-x-3">
-          <div className="text-blue-400 text-xl">💡</div>
+      {/* Pro Tip */}
+      <div className="section bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20">
+        <div className="flex items-start space-x-4">
+          <div className="p-2 bg-blue-500/20 rounded-xl">
+            <LightBulbIcon className="w-6 h-6 text-blue-400" />
+          </div>
           <div>
-            <h3 className="font-medium text-blue-300 mb-1">Pro Tip</h3>
-            <p className="text-blue-200 text-sm">
+            <h3 className="font-semibold text-blue-300 mb-2 font-display">Pro Tip</h3>
+            <p className="text-blue-200 leading-relaxed">
               These prompts are starting points. Feel free to modify them,
               combine elements from different prompts, or add your own creative
               touches to get the exact result you're looking for.

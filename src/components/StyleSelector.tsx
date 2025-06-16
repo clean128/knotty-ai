@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import { 
+  PaintBrushIcon, 
+  LightBulbIcon, 
+  MagnifyingGlassIcon 
+} from '@heroicons/react/24/outline'
 
 interface StyleSelectorProps {
   onStyleChange: (prompt: string, negativePrompt: string) => void
@@ -71,14 +76,15 @@ const StyleSelector = ({ onStyleChange }: StyleSelectorProps) => {
     <div className="section">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Style Selector */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            🎨 Style
+        <div className="space-y-3">
+          <label className="flex items-center space-x-2 text-sm font-semibold text-neutral-200">
+            <PaintBrushIcon className="w-5 h-5 text-primary-400" />
+            <span>Style</span>
           </label>
           <select
             value={selectedStyle}
             onChange={(e) => handleStyleChange(e.target.value)}
-            className="w-full p-3 bg-dark-700 border border-dark-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-600"
+            className="w-full p-3 bg-dark-700/50 border border-dark-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
           >
             {Object.keys(STYLES).map((style) => (
               <option key={style} value={style}>
@@ -89,14 +95,15 @@ const StyleSelector = ({ onStyleChange }: StyleSelectorProps) => {
         </div>
 
         {/* Lighting Selector */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            💡 Realistic Setting
+        <div className="space-y-3">
+          <label className="flex items-center space-x-2 text-sm font-semibold text-neutral-200">
+            <LightBulbIcon className="w-5 h-5 text-yellow-400" />
+            <span>Realistic Setting</span>
           </label>
           <select
             value={selectedLighting}
             onChange={(e) => handleLightingChange(e.target.value)}
-            className="w-full p-3 bg-dark-700 border border-dark-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-600"
+            className="w-full p-3 bg-dark-700/50 border border-dark-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
           >
             <option value="None">None</option>
             <option value="2.7D">2.7D Realistic</option>
@@ -104,14 +111,15 @@ const StyleSelector = ({ onStyleChange }: StyleSelectorProps) => {
         </div>
 
         {/* Detail Level Selector */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            🎯 Detail Level
+        <div className="space-y-3">
+          <label className="flex items-center space-x-2 text-sm font-semibold text-neutral-200">
+            <MagnifyingGlassIcon className="w-5 h-5 text-accent-400" />
+            <span>Detail Level</span>
           </label>
           <select
             value={selectedDetail}
             onChange={(e) => handleDetailChange(e.target.value)}
-            className="w-full p-3 bg-dark-700 border border-dark-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-600"
+            className="w-full p-3 bg-dark-700/50 border border-dark-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
           >
             <option value="None">None</option>
             <option value="Highly Detailed">Highly Detailed</option>

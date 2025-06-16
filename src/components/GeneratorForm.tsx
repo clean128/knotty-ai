@@ -5,6 +5,14 @@ import StyleSelector from './StyleSelector'
 import PromptInputs from './PromptInputs'
 import SettingsPanel from './SettingsPanel'
 import EtaDisplay from './EtaDisplay'
+import { 
+  BoltIcon, 
+  BookmarkIcon,
+  ArrowDownTrayIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  ClockIcon
+} from '@heroicons/react/24/outline'
 
 const GeneratorForm = () => {
   const { updateTokens } = useAuth()
@@ -15,15 +23,18 @@ const GeneratorForm = () => {
   const [cfg, setCfg] = useState(5)
   const [isGenerating, setIsGenerating] = useState(false)
   const [generationStatus, setGenerationStatus] = useState('')
+  const [statusType, setStatusType] = useState<'success' | 'error' | 'loading' | ''>('')
 
   const handleGenerate = async () => {
     if (!positivePrompt.trim()) {
-      setGenerationStatus('❌ Please enter a positive prompt')
+      setGenerationStatus('Please enter a positive prompt')
+      setStatusType('error')
       return
     }
 
     setIsGenerating(true)
-    setGenerationStatus('⏳ Generating images...')
+    setGenerationStatus('Generating images...')
+    setStatusType('loading')
 
     try {
       const response = await apiService.generateImage({
@@ -48,16 +59,19 @@ const GeneratorForm = () => {
           document.body.removeChild(downloadLink)
         })
 
-        setGenerationStatus('✅ 3 images downloaded & saved to history.')
+        setGenerationStatus('3 images downloaded & saved to history.')
+        setStatusType('success')
         
         // Update token count (assuming 1 token per generation)
         const tokenResponse = await apiService.getTokenCount()
         updateTokens(tokenResponse.tokens)
       } else {
-        setGenerationStatus(`❌ ${response.error || 'Generation failed'}`)
+        setGenerationStatus(response.error || 'Generation failed')
+        setStatusType('error')
       }
     } catch (error) {
-      setGenerationStatus('❌ Error occurred during generation')
+      setGenerationStatus('Error occurred during generation')
+      setStatusType('error')
     } finally {
       setIsGenerating(false)
     }
@@ -74,17 +88,33 @@ const GeneratorForm = () => {
       })
 
       if (response.success) {
-        setGenerationStatus('✅ Prompt saved successfully!')
+        setGenerationStatus('Prompt saved successfully!')
+        setStatusType('success')
       } else {
-        setGenerationStatus('❌ Failed to save prompt')
+        setGenerationStatus('Failed to save prompt')
+        setStatusType('error')
       }
     } catch (error) {
-      setGenerationStatus('❌ Error saving prompt')
+      setGenerationStatus('Error saving prompt')
+      setStatusType('error')
+    }
+  }
+
+  const getStatusIcon = () => {
+    switch (statusType) {
+      case 'success':
+        return <CheckCircleIcon className="w-5 h-5 text-accent-400" />
+      case 'error':
+        return <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
+      case 'loading':
+        return <ClockIcon className="w-5 h-5 text-yellow-400 animate-spin" />
+      default:
+        return null
     }
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Style and Settings Row */}
       <StyleSelector 
         onStyleChange={(prompt, negPrompt) => {
@@ -102,12 +132,13 @@ const GeneratorForm = () => {
       />
 
       {/* Save Prompt Button */}
-      <div className="text-center">
+      <div className="flex justify-center">
         <button
           onClick={handleSavePrompt}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+          className="btn-accent flex items-center space-x-2"
         >
-          💾 Save Prompt
+          <BookmarkIcon className="w-5 h-5" />
+          <span>Save Prompt</span>
         </button>
       </div>
 
@@ -126,39 +157,64 @@ const GeneratorForm = () => {
         <button
           onClick={handleGenerate}
           disabled={isGenerating}
-          className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 ${
+          className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
             isGenerating
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'btn-primary hover:scale-105'
+              ? 'bg-neutral-600 cursor-not-allowed text-neutral-400'
+              : 'btn-primary glow-on-hover'
           }`}
         >
-          {isGenerating ? '⏳ Generating...' : '⚡ Generate Image'}
+          {isGenerating ? (
+            <>
+              <ClockIcon className="w-6 h-6 animate-spin" />
+              <span>Generating...</span>
+            </>
+          ) : (
+            <>
+              <BoltIcon className="w-6 h-6" />
+              <span>Generate Image</span>
+            </>
+          )}
         </button>
 
         <EtaDisplay />
 
         {generationStatus && (
-          <div className="mt-4 p-3 bg-dark-700 rounded-lg text-center">
-            {generationStatus}
+          <div className={`mt-6 p-4 rounded-xl flex items-center space-x-3 ${
+            statusType === 'success' ? 'bg-accent-500/20 border border-accent-500/30' :
+            statusType === 'error' ? 'bg-red-500/20 border border-red-500/30' :
+            statusType === 'loading' ? 'bg-yellow-500/20 border border-yellow-500/30' :
+            'bg-dark-700/50 border border-dark-600/50'
+          }`}>
+            {getStatusIcon()}
+            <span className={`font-medium ${
+              statusType === 'success' ? 'text-accent-300' :
+              statusType === 'error' ? 'text-red-300' :
+              statusType === 'loading' ? 'text-yellow-300' :
+              'text-neutral-300'
+            }`}>
+              {generationStatus}
+            </span>
           </div>
         )}
 
-        <div className="mt-4 space-y-2 text-center">
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <a
             href="https://beastgenerator.xyz/generator/guide.html"
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-primary-600 hover:text-primary-500 text-sm underline"
+            className="flex items-center justify-center space-x-2 p-3 bg-dark-700/50 hover:bg-dark-600/50 rounded-xl text-primary-400 hover:text-primary-300 transition-all duration-200 font-medium"
           >
-            📖 Full Generator Guide
+            <ArrowDownTrayIcon className="w-5 h-5" />
+            <span>Full Generator Guide</span>
           </a>
           <a
             href="https://beastgenerator.xyz/generator/prompts.phtml"
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-primary-600 hover:text-primary-500 text-sm underline"
+            className="flex items-center justify-center space-x-2 p-3 bg-dark-700/50 hover:bg-dark-600/50 rounded-xl text-primary-400 hover:text-primary-300 transition-all duration-200 font-medium"
           >
-            🧪 Prompt Builder
+            <BoltIcon className="w-5 h-5" />
+            <span>Prompt Builder</span>
           </a>
         </div>
       </div>

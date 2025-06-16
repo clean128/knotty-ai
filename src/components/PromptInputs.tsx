@@ -1,4 +1,10 @@
 import { useState } from 'react'
+import { 
+  PlusCircleIcon, 
+  MinusCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon
+} from '@heroicons/react/24/outline'
 
 interface PromptInputsProps {
   positivePrompt: string
@@ -44,34 +50,35 @@ const PromptInputs = ({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Positive Prompt */}
       <div className="section">
-        <label className="block text-sm font-medium text-gray-300 mb-3">
-          🟢 Positive Prompt
+        <label className="flex items-center space-x-2 text-sm font-semibold text-neutral-200 mb-4">
+          <PlusCircleIcon className="w-5 h-5 text-accent-400" />
+          <span>Positive Prompt</span>
         </label>
         <textarea
           value={positivePrompt}
           onChange={(e) => onPositiveChange(e.target.value)}
           placeholder="Enter positive prompt..."
-          className="w-full h-36 p-4 bg-dark-900 border border-dark-600 rounded-lg text-white placeholder-gray-400 resize-vertical focus:outline-none focus:ring-2 focus:ring-primary-600 font-mono text-sm"
+          className="textarea-field h-40"
         />
         
         <div className="mt-4 flex flex-wrap gap-3 justify-center">
-          <label className="flex items-center text-sm text-gray-400">
-            <input type="checkbox" disabled className="mr-2" />
+          <label className="flex items-center text-sm text-neutral-400 cursor-not-allowed">
+            <input type="checkbox" disabled className="mr-2 opacity-50" />
             Anime Faces
           </label>
-          <label className="flex items-center text-sm text-gray-400">
-            <input type="checkbox" disabled className="mr-2" />
+          <label className="flex items-center text-sm text-neutral-400 cursor-not-allowed">
+            <input type="checkbox" disabled className="mr-2 opacity-50" />
             Clothing
           </label>
-          <label className="flex items-center text-sm text-gray-400">
-            <input type="checkbox" disabled className="mr-2" />
+          <label className="flex items-center text-sm text-neutral-400 cursor-not-allowed">
+            <input type="checkbox" disabled className="mr-2 opacity-50" />
             Expressions
           </label>
-          <label className="flex items-center text-sm text-gray-400">
-            <input type="checkbox" disabled className="mr-2" />
+          <label className="flex items-center text-sm text-neutral-400 cursor-not-allowed">
+            <input type="checkbox" disabled className="mr-2 opacity-50" />
             Environment
           </label>
         </div>
@@ -79,28 +86,48 @@ const PromptInputs = ({
 
       {/* Negative Prompt */}
       <div className="section">
-        <label className="block text-sm font-medium text-gray-300 mb-3">
-          🔴 Negative Prompt
+        <label className="flex items-center space-x-2 text-sm font-semibold text-neutral-200 mb-4">
+          <MinusCircleIcon className="w-5 h-5 text-red-400" />
+          <span>Negative Prompt</span>
         </label>
         <textarea
           value={negativePrompt}
           onChange={(e) => onNegativeChange(e.target.value)}
           placeholder="Enter negative prompt..."
-          className="w-full h-36 p-4 bg-dark-900 border border-dark-600 rounded-lg text-white placeholder-gray-400 resize-vertical focus:outline-none focus:ring-2 focus:ring-primary-600 font-mono text-sm"
+          className="textarea-field h-40"
         />
         
-        <div className="mt-4 flex flex-wrap gap-3 justify-center">
-          {Object.keys(negPresets).map((presetKey) => (
-            <label key={presetKey} className="flex items-center text-sm text-gray-300">
-              <input
-                type="checkbox"
-                checked={selectedPresets.includes(presetKey)}
-                onChange={() => handlePresetToggle(presetKey)}
-                className="mr-2 accent-primary-600"
-              />
-              {presetKey.charAt(0).toUpperCase() + presetKey.slice(1)}
-            </label>
-          ))}
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
+          {Object.keys(negPresets).map((presetKey) => {
+            const isSelected = selectedPresets.includes(presetKey)
+            return (
+              <label 
+                key={presetKey} 
+                className={`flex items-center space-x-2 p-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                  isSelected 
+                    ? 'bg-red-500/20 border border-red-500/30 text-red-300' 
+                    : 'bg-dark-700/30 hover:bg-dark-600/30 text-neutral-300 hover:text-white'
+                }`}
+              >
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => handlePresetToggle(presetKey)}
+                    className="sr-only"
+                  />
+                  {isSelected ? (
+                    <CheckCircleIcon className="w-4 h-4 text-red-400" />
+                  ) : (
+                    <XCircleIcon className="w-4 h-4 text-neutral-500" />
+                  )}
+                </div>
+                <span className="text-sm font-medium capitalize">
+                  {presetKey}
+                </span>
+              </label>
+            )
+          })}
         </div>
       </div>
     </div>

@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { apiService } from '../services/apiService'
+import { 
+  CurrencyDollarIcon,
+  ArrowPathIcon
+} from '@heroicons/react/24/outline'
 
 const TokenCounter = () => {
   const { user, updateTokens } = useAuth()
@@ -28,14 +32,21 @@ const TokenCounter = () => {
   }, [updateTokens, isUpdating])
 
   return (
-    <div className="flex items-center space-x-2">
-      <span className="text-gray-400">Tokens:</span>
-      <span className="text-primary-600 font-bold text-lg">
-        {user?.tokens || 0}
-      </span>
-      {isUpdating && (
-        <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-      )}
+    <div className="flex items-center space-x-3 p-4 bg-dark-800/30 rounded-xl backdrop-blur-sm border border-dark-700/30">
+      <div className="p-2 bg-primary-500/20 rounded-lg">
+        <CurrencyDollarIcon className="w-5 h-5 text-primary-400" />
+      </div>
+      <div className="flex flex-col">
+        <span className="text-xs text-neutral-400 font-medium">Available Tokens</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-lg font-bold text-primary-400">
+            {user?.tokens || 0}
+          </span>
+          {isUpdating && (
+            <ArrowPathIcon className="w-4 h-4 text-primary-400 animate-spin" />
+          )}
+        </div>
+      </div>
     </div>
   )
 }
