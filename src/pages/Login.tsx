@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { 
+import {
   SparklesIcon,
   UserIcon,
   LockClosedIcon,
   CurrencyDollarIcon,
   ShieldCheckIcon,
   ChatBubbleLeftRightIcon,
-  UserPlusIcon
+  UserPlusIcon,
 } from "@heroicons/react/24/outline";
 
 const Login = () => {
@@ -55,7 +55,7 @@ const Login = () => {
               </div>
             </div>
             <p className="text-neutral-400 text-sm font-medium">
-              Created by kaylabytes/Blackshadows
+              Created by Clean128
             </p>
           </div>
 
@@ -63,7 +63,9 @@ const Login = () => {
           <div className="text-center mb-8 p-4 bg-dark-800/30 rounded-xl backdrop-blur-sm border border-dark-700/30">
             <div className="flex items-center justify-center space-x-2 mb-3">
               <CurrencyDollarIcon className="w-5 h-5 text-primary-400" />
-              <span className="text-sm font-semibold text-neutral-200">Token Packages</span>
+              <span className="text-sm font-semibold text-neutral-200">
+                Token Packages
+              </span>
             </div>
             <div className="text-sm text-neutral-300 leading-relaxed space-y-1">
               <div className="flex justify-between">
@@ -111,7 +113,7 @@ const Login = () => {
                 />
               </div>
             </div>
-            
+
             <button
               type="submit"
               disabled={loading}
@@ -150,7 +152,7 @@ const Login = () => {
                 <span>Buy Tokens</span>
               </a>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <a
                 href="https://beastgenerator.xyz/privacy.html"
